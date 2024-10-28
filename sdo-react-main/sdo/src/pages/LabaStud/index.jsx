@@ -41,10 +41,12 @@ const TitleText = styled.p`
   font-size: 20px;
   text-align: left;
   width: 1250px;
+  margin-left: 10px;
 `;
 
 const Title = styled.h1`
   font-size: 18px;
+  margin-left: 10px;
 `;
 
 const Text = styled.p`
@@ -81,9 +83,9 @@ const ButtonContainer = styled.div`
 
 const ToggleContent = styled.div`
   display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
-  background: #F0F0F0;
+  background: #;
   padding: 15px;
-  border-radius: 0 0 7px 7px;
+  border-radius: 7px;
 `;
 
 const UploadTitle = styled.div`
@@ -113,7 +115,6 @@ const LabaStud = () => {
   const { id } = useParams();
 
   const handleSubmit = async () => {
-    // Here, you might want to handle each task's file separately
     if (fileTask1 || fileTask2 || fileTask3) {
       const handleFileSubmit = async (file, taskId) => {
         const reader = new FileReader();
@@ -138,8 +139,6 @@ const LabaStud = () => {
             });
         };
       };
-
-      // Submit files for each task if they exist
       if (fileTask1) await handleFileSubmit(fileTask1, 1);
       if (fileTask2) await handleFileSubmit(fileTask2, 2);
       if (fileTask3) await handleFileSubmit(fileTask3, 3);
@@ -154,10 +153,7 @@ const LabaStud = () => {
 
   return (
     <Container>
-      {/* Title of the lab work */}
       <TitleText>Лабораторная работа №{id}: “Наибольшее из трех чисел”</TitleText>
-
-      {/* Block: Description of tests */}
       <BlockTest>
         <Title>Типы тестов, используемые в данной лабораторной работе:</Title>
         <ul>
@@ -259,12 +255,10 @@ const LabaStud = () => {
         </ToggleContent>
       </BlockTask>
 
-      <BlockTest>
-        <ButtonContainer>
+      <ButtonContainer>
           <Button onClick={handleSubmit}>Отправить на проверку</Button>
           <Button onClick={handleSaveDraft}>Сохранить черновик</Button>
-        </ButtonContainer>
-      </BlockTest>
+      </ButtonContainer>
     </Container>
   );
 };
