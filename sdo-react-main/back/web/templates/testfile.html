@@ -20,6 +20,7 @@
 
     <div id="result" class="result hidden">
         <h2>Processing Result:</h2>
+        <p><strong>Status:</strong> <span id="status"></span></p>
         <p><strong>Formulas:</strong> <span id="formulas"></span></p>
         <p><strong>Result:</strong> <span id="resultOutput"></span></p>
         <p><strong>Execution Time:</strong> <span id="executionTime"></span></p>
@@ -72,6 +73,7 @@
                     const testData = await testResponse.json();
 
                     // Отображение результата тестирования
+                    document.getElementById('status').textContent = testData.status;
                     document.getElementById('formulas').textContent = testData.formulas;
                     document.getElementById('resultOutput').textContent = testData.result;
                     document.getElementById('executionTime').textContent = testData.execution_time;

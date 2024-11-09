@@ -120,15 +120,17 @@ def check_formulas(path_teacher_formula, path_input_variables, path_code):
     return res
 
 
-def execute_code(file_path: str) -> tuple[str, float, int]:
+def execute_code(file_path: str) -> tuple[str, str, float, int]:
     inputs: list[int] = [1, 2, 3]
     with open(file_path, 'r') as file:
         code = file.read()
 
     output = io.StringIO()
     start_time = time.time()
+    status = "Success"
 
     def exec_code():
+        nonlocal status
         try:
             with contextlib.redirect_stdout(output):
                 if inputs:
@@ -136,6 +138,7 @@ def execute_code(file_path: str) -> tuple[str, float, int]:
                     builtins.input = lambda: next(input_iter)
                 exec(code)
         except Exception as e:
+            status = "Failed"
             output.write(f"Error executing code: {e}")
 
     thread = threading.Thread(target=exec_code)
@@ -151,11 +154,11 @@ def execute_code(file_path: str) -> tuple[str, float, int]:
     code_length = sum(1 for line in code.split('\n') if line.strip())
     result = output.getvalue()
 
-    return result, execution_time, code_length
+    return status, result, execution_time, code_length
 
 
 # main testing file
-def check_file(path_teacher_formula, path_input_variables, path_code) -> tuple[str, str, float, int]:
+def check_file(path_teacher_formula, path_input_variables, path_code) -> tuple[str, str, float, int, str]:
     formulas_output = check_formulas(path_teacher_formula, path_input_variables, path_code)
-    code_output, execution_time, code_length = execute_code(path_code)
-    return formulas_output, code_output, execution_time, code_length
+    status, code_output, execution_time, code_length = execute_code(path_code)
+    return formulas_output, code_output, execution_time, code_length, status

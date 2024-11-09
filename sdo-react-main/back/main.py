@@ -248,7 +248,8 @@ async def checking_file(filename: str = Form(...)):
             "formulas": result_output[0],
             "result": result_output[1],
             "execution_time": result_output[2],
-            "code_length": result_output[3]
+            "code_length": result_output[3],
+            "status": result_output[4]
         }
     )
 
