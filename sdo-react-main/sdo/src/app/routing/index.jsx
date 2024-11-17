@@ -9,8 +9,8 @@ import StudLaboratory from "../../pages/Laboratory/StudLaboratory";
 import LaboratoryAdd from "../../pages/LaboratoryAdd/index";
 import PersonalTeacher from "../../pages/Personal/PersonalTeacher";
 import PersonalStud from "../../pages/Personal/PersonalStud";
-import MainTeacher from "../../components/Main/mainTeacher";
-import MainStud from "../../components/Main/mainStud";
+// import MainTeacher from "../../components/Main/mainTeacher";
+// import MainStud from "../../components/Main/mainStud";
 import LabaStud from "../../pages/LabaStud/index";
 import Attempts from "../../pages/Attempts/index";
 import ScrollToTop from "../../components/ScrollToTop";
@@ -29,8 +29,8 @@ const MainRouter = () => {
         <Route path="/PersonalTeacher" element={<PersonalTeacher />} />
         <Route path="/StudLaboratory" element={<StudLaboratory />} />
         <Route path="/PersonalStud" element={<PersonalStud />} />
-        <Route path="/mainStud" element={<MainStud />} />
-        <Route path="/mainTeacher" element={<MainTeacher />} />
+        {/* <Route path="/mainStud" element={<MainStud />} />
+        <Route path="/mainTeacher" element={<MainTeacher />} /> */}
         <Route path="registration" element={<Registration />} />
         <Route path="/labaStud/:id" element={<LabaStud />} />
         <Route path="/attempts" element={<Attempts />} />
