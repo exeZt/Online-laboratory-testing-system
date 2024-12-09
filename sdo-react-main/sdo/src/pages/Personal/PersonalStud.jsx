@@ -1,4 +1,6 @@
 import styled from "styled-components"
+import React, { useState, useEffect } from "react";
+import UserData from ".models/UserDataModel.tsx";
 
 const SectionLab = styled.div`
     display: flex;
@@ -8,44 +10,29 @@ const SectionLab = styled.div`
 `
 const List = styled.li`
     width: 320px;
-    height: auto;
-    background-color: #BECBEE;
+    height: 100px;
+    background-color: #D5DEF6;
     border-radius: 7px;
     list-style-type: none;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    padding: 10px 20px;
-    gap: 5px;
-`;
-
+    align-items: center;
+    justify-content: center;
+`
 const ListSubject = styled.li`
-    width: 550px;
-    height: 70px;
+    width: 520px;
+    height: 50px;
     background-color: #fff;
     border-radius: 7px;
     list-style-type: none;
     display: flex;
+    flex-direction: row;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 10px;
+    justify-content: center;
 `
-
-const SubjectName = styled.div`
-    flex: 1;
-    text-align: left;
-`
-
-const ActionWrapper = styled.div`
-    display: flex;
-    align-items: center;
-    gap: 10px;
-`
-
 const BigList = styled.li`
     width: ${({ $Block }) => ($Block ? '673px' : '673px')};
-    height: ${({ $Block }) => ($Block ? '500px' : '500px')}; /* можно увеличить высоту, например, до 550px */
+    height: ${({ $Block }) => ($Block ? '430px' : '430px')};
     background-color: #E2EDD0;
     border-radius: 7px;
     display: flex;
@@ -53,65 +40,21 @@ const BigList = styled.li`
     align-items: center;
     list-style-type: none;
     justify-content: space-around;
-    margin-left: 20px;
-    padding-bottom: 20px; /* добавляем отступ снизу */
 `
-
-
 const Score = styled.div`
-    width: 50px;
+    width: 40px;
     height: 40px;
-    background-color: ${({ score }) => (score < 10 ? '#D9D9D9' : '#21B200')};
-    border-radius: 6px;
-    display: flex;
+    background-color: grey;
+    border-radius: 7px;
     align-items: center;
     justify-content: center;
-    text-align: center;
-`;
-
+    margin-left: 20px;
+`
 const Text = styled.p`
     font-family: 'Montserrat';
     font-size: 16px;
-    margin: 0 0 10px;
-`;
-
-const TextD = styled.h1`
-    font-family: 'Montserrat';
-    font-size: 18px;
-    margin-bottom: 0px;
-    text-align: left; /* Выравнивание текста по левому краю */
-    align-self: flex-start; /* Располагает элемент слева внутри контейнера */
-    padding-left: 55px; /* Добавляем небольшой отступ слева */
-`;
-
-
-const TextObj = styled.p`
-    font-family: 'Montserrat';
-    font-size: 16px;
-    margin: 0 15 10px;
-`;
-
-const TextMain = styled.h1`
-    font-family: 'Montserrat';
-    font-size: 16px;
-    margin: 0 0 10px;
-    font-weight: 600;
-`;
-
-const TextButton = styled.p`
-    font-family: 'Montserrat';
-    font-size: 16px;
-    margin-top: 15px;
-    color: #FFFFFF;
-`;
-
-const ScoreText = styled.p`
-    font-family: 'Montserrat';
-    font-size: 16px;
-    margin-top: 15px;
-    color: #FFFFFF;
-`;
-
+    font-weight: 600;  
+`
 const RowBlocks = styled.div`
     display: flex;
     flex-direction: column;
@@ -123,157 +66,92 @@ const RowBlocks = styled.div`
 const Button = styled.div`
     width: 100px;
     height: 40px;
-    background-color: #BECBEE;
-    border-radius: 5px;
+    background-color: #C8D5F6;
+    border-radius: 7px;
     display: flex;
     justify-content: center;
     align-items: center;
     margin-left: 20px;
 `
-const PersonalStud = () => {
+export default function PersonalStud(){
+    const [studentInfo, setStudentInfo] = useState<UserData>({
+        username: "",
+        password: "",
+        roletype : "",
+        studygroup: "",
+        form_education: "",
+        faculty: ""
+    });
+
+    const requestOptions = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem("access_token")}`
+        },
+      };
+
+    useEffect(() => {
+        fetch('http://127.0.0.1:8000/user_data', requestOptions)
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Failed to fetch');
+                }
+            })
+            .then(data => {
+                setStudentInfo(data);
+            })
+            .catch(error => {
+                console.error(error.message);
+            });
+    }, []);
 
     return (
         <>
             <SectionLab>
                 <RowBlocks>
                         <List>
-                            <Text>
-                                ФИО студента:
-                            </Text>
-                            <TextMain>
-                                Иванов Иван Иванович
-                            </TextMain>
+                            <Text content="ФИО студента:"/>
+                            <Text content={studentInfo.username}/>
                         </List>
                         <List>
-                            <Text>
-                                Номер группы:
-                            </Text>
-                            <TextMain>
-                                221-111  
-                            </TextMain>
+                            <Text content="Номер группы:"/>
+                            <Text content={studentInfo.studygroup}/>
                         </List>
                         <List>
-                            <Text>
-                                Форма обучения:
-                            </Text>
-                            <TextMain>
-                                Очная
-                            </TextMain>
+                            <Text content="Форма обучения:"/>
+                            <Text content={studentInfo.form_education}/>
                         </List>
                         <List>
-                            <Text>
-                                Направление обучения:
-                            </Text>
-                            <TextMain>
-                                Информационная безопасность
-                            </TextMain>
+                            <Text content="Направление обучения:"/>
+                            <Text content={studentInfo.faculty}/>
                         </List>
                 </RowBlocks>
                 <RowBlocks>
                     <BigList>
-                        <TextD>
+                        <Text>
                             Дисциплины:
-                        </TextD>
+                        </Text>
                         <ListSubject>
-                            <SubjectName>
-                                <TextObj>
-                                    Базы данных
-                                </TextObj>
-                            </SubjectName>
-                            <ActionWrapper>
-                                <Score score={4}>
-                                    <ScoreText>
-                                        4/10
-                                    </ScoreText>
-                                </Score>
-                                <Button>
-                                    <TextButton>
-                                        Перейти
-                                    </TextButton>
-                                </Button>
-                            </ActionWrapper>
-                        </ListSubject>
-                        <ListSubject>
-                        <SubjectName>
-                            <TextObj>
-                            Программирование на языке С++
-                            </TextObj>
-                        </SubjectName>
-                        <ActionWrapper>
-                            <Score score={4}>
-                                <ScoreText>
-                                    4/10
-                                </ScoreText>
-                            </Score>
-                            <Button>
-                                <TextButton>
-                                    Перейти
-                                </TextButton>
-                            </Button>
-                        </ActionWrapper>
-                    </ListSubject>
-                    <ListSubject>
-                        <SubjectName>
-                            <TextObj>
-                            Разработка web приложений
-                            </TextObj>
-                        </SubjectName>
-                        <ActionWrapper>
-                            <Score score={5}>
-                                <ScoreText>
+                            <Text>
+                                Предмет
+                            </Text>
+                            <Score>
+                                <Text>
                                     5/10
-                                </ScoreText>
+                                </Text>
                             </Score>
                             <Button>
-                                <TextButton>
+                                <Text>
                                     Перейти
-                                </TextButton>
+                                </Text>
                             </Button>
-                        </ActionWrapper>
-                    </ListSubject>
-                    <ListSubject>
-                        <SubjectName>
-                            <TextObj>
-                            Программирование на языке python
-                            </TextObj>
-                        </SubjectName>
-                        <ActionWrapper>
-                            <Score score={7}>
-                                <ScoreText>
-                                    7/10
-                                </ScoreText>
-                            </Score>
-                            <Button>
-                                <TextButton>
-                                    Перейти
-                                </TextButton>
-                            </Button>
-                        </ActionWrapper>
-                    </ListSubject>
-                    <ListSubject>
-                        <SubjectName>
-                            <TextObj>
-                            Методы и языки программирования
-                            </TextObj>
-                        </SubjectName>
-                        <ActionWrapper>
-                            <Score score={10}>
-                                <ScoreText>
-                                    10/10
-                                </ScoreText>
-                            </Score>
-                            <Button>
-                                <TextButton>
-                                    Перейти
-                                </TextButton>
-                            </Button>
-                        </ActionWrapper>
-                    </ListSubject>
+                        </ListSubject>
                     </BigList>
                 </RowBlocks>
             </SectionLab>
         </>
      );
 }
- 
-export default PersonalStud;
