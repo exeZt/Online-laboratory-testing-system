@@ -83,7 +83,7 @@ export default function PersonalStud(){
     });
 
     const requestOptions = {
-        method: 'POST',
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem("access_token")}`
