@@ -1,5 +1,6 @@
 import styled from "styled-components"
 import React, { useState, useEffect } from "react";
+import { getUserData } from '../../api/user-api'
 
 const SectionLab = styled.div`
     display: flex;
@@ -72,6 +73,7 @@ const Button = styled.div`
     align-items: center;
     margin-left: 20px;
 `
+
 export default function PersonalStud(){
     const [studentInfo, setStudentInfo] = useState({
         username: "",
@@ -82,16 +84,8 @@ export default function PersonalStud(){
         faculty: ""
     });
 
-    const requestOptions = {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem("access_token")}`
-        },
-      };
-
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/user_data', requestOptions)
+        getUserData()
             .then(response => {
                 if (response.ok) {
                     return response.json();
@@ -112,32 +106,40 @@ export default function PersonalStud(){
             <SectionLab>
                 <RowBlocks>
                         <List>
-                            <Text>ФИО студента:</Text>
-                            <Text>{studentInfo.username}</Text>
+                            <Text content="ФИО студента:"/>
+                            <Text content={studentInfo.username}/>
                         </List>
                         <List>
-                            <Text>Номер группы:</Text>
-                            <Text>{studentInfo.studygroup}</Text>
+                            <Text content="Номер группы:"/>
+                            <Text content={studentInfo.studygroup}/>
                         </List>
                         <List>
-                            <Text>Форма обучения:</Text>
-                            <Text>{studentInfo.form_education}</Text>
+                            <Text content="Форма обучения:"/>
+                            <Text content={studentInfo.form_education}/>
                         </List>
                         <List>
-                            <Text>Направление обучения:</Text>
-                            <Text>{studentInfo.faculty}</Text>
+                            <Text content="Направление обучения:"/>
+                            <Text content={studentInfo.faculty}/>
                         </List>
                 </RowBlocks>
                 <RowBlocks>
                     <BigList>
-                        <Text> Дисциплины: </Text>
+                        <Text>
+                            Дисциплины:
+                        </Text>
                         <ListSubject>
-                            <Text> Предмет </Text>
+                            <Text>
+                                Предмет
+                            </Text>
                             <Score>
-                                <Text> 5/10 </Text>
+                                <Text>
+                                    5/10
+                                </Text>
                             </Score>
                             <Button>
-                                <Text> Перейти </Text>
+                                <Text>
+                                    Перейти
+                                </Text>
                             </Button>
                         </ListSubject>
                     </BigList>

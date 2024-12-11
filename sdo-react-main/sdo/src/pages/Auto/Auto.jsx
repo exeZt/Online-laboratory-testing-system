@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { login } from './Slice/authSlice'; 
+import { getUserStatus, loginUser } from '../../api/user-api'
 
 const Section = styled.div`
   display: flex;
@@ -64,12 +65,7 @@ const Auto = () => {
   const navigate = useNavigate();
 
   const handleSuccessfulLogin = () => {
-    fetch('http://127.0.0.1:8040/user_status', {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-      }
-    })
+    getUserStatus()
     .then(response => {
       if (response.ok) {
         return response.json();
@@ -98,13 +94,7 @@ const Auto = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 'username': username, 'password': password })
-    };
-
-    fetch('http://127.0.0.1:8040/login', requestOptions)
+    loginUser(username, password)
       .then(response => {
         if (response.ok) {
           return response.json();
