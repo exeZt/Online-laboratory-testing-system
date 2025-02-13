@@ -123,13 +123,7 @@ const LabaStud = () => {
           const encodedFile = base64.encode(
             String.fromCharCode(...new Uint8Array(reader.result))
           );
-          fetch(`http://0.0.0.0:8002/check/${taskId}`, {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            method: 'POST',
-            body: JSON.stringify({ file: encodedFile }),
-          })
+          uploadByTaskId(taskId,encodedFile)
             .then((response) => response.json())
             .then((data) => {
               console.log(`Результаты тестов для Задачи ${taskId}:`, data);

@@ -50,44 +50,31 @@ const Button = styled.button`
 }
 `
 const Registration = () => {
-  const [username, setUserName] = useState('');
-  const [password, setPassword] = useState('');
-  const [numberGroup, setNumberGroup] = useState('');
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-  
-    const data = {
+  const [newUserState, setNewUser] = useState({
       username,
       password,
       group_name: numberGroup,
-    };
-  
-    const requestOptions = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    };
-  
-    try {
-      const response = await fetch('http://127.0.0.1:8040/register', requestOptions);
-  
-      if (!response.ok) {
-        throw new Error('Не удалось зарегистрироваться');
-      }
-  
-      const responseData = await response.json();
-      localStorage.setItem('access_token', responseData.access_token);
-      localStorage.setItem('role', responseData.role);
-  
-      setUserName('');
-      setPassword('');
-      setNumberGroup('');
-    } catch (error) {
-      console.error('Ошибка при регистрации:', error.message);
     }
+  );
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    registerUser()
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Failed to fetch');
+            }
+        })
+        .then(data => {
+          localStorage.setItem('access_token', data.access_token);
+          localStorage.setItem('role', data.role);
+        })
+        .catch(error => {
+            console.error(error.message);
+        });
   };
 
   return (
@@ -108,7 +95,7 @@ const Registration = () => {
             name='username'
             value={username}
             className='section__login-formInput'
-            onChange={(e) => setUserName(e.target.value)}
+            onChange={(e) => setNewUser({...newUserState, username: e.target.value})}
           />
           <input 
             type="password"
@@ -116,7 +103,7 @@ const Registration = () => {
             name='somepassword'
             value={password}
             className='section__login-formInput'
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => setNewUser({...newUserState, password: e.target.value})}
           />
           <input 
             type="text"
@@ -124,7 +111,7 @@ const Registration = () => {
             name='somepassword'
             value={numberGroup}
             className='section__login-formInput'
-            onChange={(e) => setNumberGroup(e.target.value)}
+            onChange={(e) => setNewUser({...newUserState, group_name: e.target.value})}
           />
           <Button type="submit">
             Зарегистрироваться

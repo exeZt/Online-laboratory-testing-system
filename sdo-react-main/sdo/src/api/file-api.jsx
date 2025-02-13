@@ -1,8 +1,9 @@
 import { appApiIns } from "./app-api";
 
-//TODO: update null to file
-export function uploadByTaskId(task_id){
-    return appApiIns.post('upload', null, {
+export function uploadByTaskId(task_id, file){
+    return appApiIns.post('upload', {
+            file: file
+        }, {
         params: {
             task_id: task_id
         }
