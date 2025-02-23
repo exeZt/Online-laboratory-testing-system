@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import FileUploader from './FileUploader';
 import base64 from 'base-64';
+import { uploadByTaskId } from '../../api/file-api';
 
 const Container = styled.div`
   display: flex;

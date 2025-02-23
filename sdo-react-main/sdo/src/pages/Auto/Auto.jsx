@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { login } from './Slice/authSlice'; 
-import { getUserStatus, loginUser } from '../../api/user-api'
+import { getUserStatus } from '../../api/user-api'
+import { loginUser } from '../../api/auth-api';
 
 const Section = styled.div`
   display: flex;
@@ -56,9 +56,6 @@ const Button = styled.button`
 `;
 
 const Auto = () => {
-  const dispatch = useDispatch();
-  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
-
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');

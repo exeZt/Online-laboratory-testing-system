@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "../../styles/style.css";
 import styled from 'styled-components'
+import { registerUser } from '../../api/auth-api';
 
 const Section = styled.div`
   display: flex;
@@ -51,9 +52,9 @@ const Button = styled.button`
 `
 const Registration = () => {
   const [newUserState, setNewUser] = useState({
-      username,
-      password,
-      group_name: numberGroup,
+      username: "",
+      password: "",
+      group_name: 0,
     }
   );
 
@@ -93,7 +94,7 @@ const Registration = () => {
             type="text" 
             placeholder=" Username" 
             name='username'
-            value={username}
+            value={newUserState.username}
             className='section__login-formInput'
             onChange={(e) => setNewUser({...newUserState, username: e.target.value})}
           />
@@ -101,7 +102,7 @@ const Registration = () => {
             type="password"
             placeholder=" Password"
             name='somepassword'
-            value={password}
+            value={newUserState.password}
             className='section__login-formInput'
             onChange={(e) => setNewUser({...newUserState, password: e.target.value})}
           />
@@ -109,7 +110,7 @@ const Registration = () => {
             type="text"
             placeholder=" Group"
             name='somepassword'
-            value={numberGroup}
+            value={newUserState.numberGroup}
             className='section__login-formInput'
             onChange={(e) => setNewUser({...newUserState, group_name: e.target.value})}
           />
