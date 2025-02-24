@@ -62,16 +62,9 @@ const Registration = () => {
     e.preventDefault();
 
     registerUser()
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                throw new Error('Failed to fetch');
-            }
-        })
-        .then(data => {
-          localStorage.setItem('access_token', data.access_token);
-          localStorage.setItem('role', data.role);
+        .then(res => {
+          localStorage.setItem('access_token', res.data.access_token);
+          localStorage.setItem('role', res.data.role);
         })
         .catch(error => {
             console.error(error.message);

@@ -89,30 +89,16 @@ export default function PersonalStud(){
 
     useEffect(() => {
         getUserData()
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error('Failed to fetch');
-                }
-            })
-            .then(data => {
-                setStudentInfo(data);
+            .then(res => {
+                setStudentInfo(res.data);
             })
             .catch(error => {
                 console.error(error.message);
             });
         
         getSubjects()
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error('Failed to fetch');
-                }
-            })
-            .then(data => {
-                setSubjectsInfo(data);
+            .then(res => {
+                setSubjectsInfo(res.data);
             })
             .catch(error => {
                 console.error(error.message);

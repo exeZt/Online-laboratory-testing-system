@@ -125,10 +125,7 @@ const LabaStud = () => {
             String.fromCharCode(...new Uint8Array(reader.result))
           );
           uploadByTaskId(taskId,encodedFile)
-            .then((response) => response.json())
-            .then((data) => {
-              console.log(`Результаты тестов для Задачи ${taskId}:`, data);
-            })
+            .then(() => {})
             .catch((error) => {
               console.error('Ошибка:', error);
             });
