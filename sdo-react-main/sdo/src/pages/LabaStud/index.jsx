@@ -124,7 +124,7 @@ const LabaStud = () => {
           const encodedFile = base64.encode(
             String.fromCharCode(...new Uint8Array(reader.result))
           );
-          uploadByTaskId(taskId,encodedFile)
+          uploadByTaskId(taskId, encodedFile)
             .then(() => {})
             .catch((error) => {
               console.error('Ошибка:', error);

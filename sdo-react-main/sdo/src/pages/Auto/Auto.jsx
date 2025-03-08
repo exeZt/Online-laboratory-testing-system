@@ -66,7 +66,7 @@ const Auto = () => {
     .then(res => {
       if (res.data.status === 'teacher') {
         navigate('/PersonalTeacher');
-      } else if (data.status === 'student') {
+      } else if (res.data.status === 'student') {
         navigate('/PersonalStud');
       } else {
         throw new Error('Неизвестный статус пользователя');
