@@ -79,7 +79,7 @@ export default function DisciplinesStud() {
     const [labsInfo, setlabsInfo] = useState([]);
   
     useEffect(() => {
-      getTasks()
+      getTasks(localStorage.getItem('subject'))
         .then(res => {
           setlabsInfo(res.data);
         })
