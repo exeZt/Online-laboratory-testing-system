@@ -5,9 +5,5 @@ export function getSubjects(){
 }
 
 export function getTasks(subject_identifier){
-    return appApiIns.get('tasks',{
-        params: {
-            subject_identifier: subject_identifier
-        }
-    });
+    return appApiIns.get(`tasks/${subject_identifier}`);
 }

@@ -1,27 +1,15 @@
 import { appApiIns } from "./app-api";
 
 export function uploadByTaskId(task_id, file){
-    return appApiIns.post('upload', {
+    return appApiIns.post(`upload/${task_id}`, {
             file: file
-        }, {
-        params: {
-            task_id: task_id
-        }
-    });
+        });
 }
 
 export function testingTask(task_id){
-    return appApiIns.post('test', null, {
-        params: {
-            task_id: task_id
-        }
-    });
+    return appApiIns.post(`test/${task_id}`, null);
 }
 
 export function getTask(task_id){
-    return appApiIns.get('task', null, {
-        params: {
-            task_id: task_id
-        }
-    });
+    return appApiIns.get(`task/${task_id}`);
 }
