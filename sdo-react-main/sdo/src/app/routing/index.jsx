@@ -17,6 +17,7 @@ import ScrollToTop from "../../components/ScrollToTop";
 import CheckLaboratory from "../../pages/CheckLaboratory/CheckLaboratory";
 import Groups from "../../pages/Groups/Groups";
 import Disciplines from "../../pages/Disciplines/Disciplines";
+import DisciplinesStud from "../../pages/DisciplinesStud/DisciplinesStud"
 const MainRouter = () => {
   return (
     <>
@@ -40,6 +41,7 @@ const MainRouter = () => {
         <Route path="/groups" element={<Groups />} />
         <Route path="/disciplines" element={<Disciplines />} />
         <Route path="*" element={<Navigate to="/login" />} />
+        <Route path="/disciplinesStud" element={<DisciplinesStud />} />
       </Routes>
     </>
   );
