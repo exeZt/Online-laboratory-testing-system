@@ -86,7 +86,7 @@ const Registration = () => {
           <input 
             type="text" 
             placeholder=" Username" 
-            name='username'
+            name='name'
             value={newUserState.username}
             className='section__login-formInput'
             onChange={(e) => setNewUser({...newUserState, username: e.target.value})}
