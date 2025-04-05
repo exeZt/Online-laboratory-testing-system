@@ -95,6 +95,7 @@ const Auto = () => {
         localStorage.setItem("access_token", res.data.access_token);
         setPassword("");
         setError("");
+        window.location.reload();
         handleSuccessfulLogin();
       })
       .catch((error) => {
