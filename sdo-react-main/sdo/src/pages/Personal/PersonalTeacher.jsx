@@ -26,32 +26,23 @@ const List = styled.li`
 `;
 
 const BigList = styled.li`
-  width: ${({ $Block }) => ($Block ? "673px" : "673px")};
-  height: ${({ $Block }) => ($Block ? "auto" : "430px")}; /* Динамическая высота для контента */
-  background-color: #e2edd0;
+  width: 800px;
+  max-height: 100px;
+  background-color: #E6F4CF;
   border-radius: 7px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  list-style-type: none;
   justify-content: space-around;
-  padding: 20px;
-`;
-
-const ListItem = styled.li`
-  width: 520px;
-  height: 50px;
-  background-color: #fff;
-  border-radius: 7px;
-  list-style-type: none;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 20px;
+  gap: 20px;
 `;
 
 const Text = styled.p`
+  font-family: "Montserrat";
+  font-size: 16px;
+`;
+
+const TextDisciplines = styled.p`
   font-family: "Montserrat";
   font-size: 16px;
   font-weight: 600;
@@ -86,7 +77,7 @@ const PersonalTeacher = () => {
   });
 
   useEffect(() => {
-    // Загрузка данных преподавателя
+
     getUserData()
       .then((res) => {
         setTeacherInfo(res.data);
@@ -95,8 +86,6 @@ const PersonalTeacher = () => {
         console.error("Ошибка загрузки данных преподавателя:", error.message);
       });
 
-      // загрузка остальных данных
-
   }, []);
 
   return (
@@ -104,10 +93,10 @@ const PersonalTeacher = () => {
       <RowBlocks>
         <List>
           <Text>ФИО преподавателя:</Text>
-          <Text>
+          <TextDisciplines>
             {teacherInfo.first_name} {teacherInfo.last_name}{" "}
             {teacherInfo.middle_name}
-          </Text>
+          </TextDisciplines>
         </List>
         <List>
           <Text>Факультет:</Text>

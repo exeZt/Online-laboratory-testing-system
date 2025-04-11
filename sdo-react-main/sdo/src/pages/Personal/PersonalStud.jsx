@@ -4,77 +4,77 @@ import { getUserData } from '../../api/user-api';
 import { getSubjects } from '../../api/subjects-api';
 import { useNavigate } from "react-router-dom";
 
-// Main section with increased gap between student info and disciplines
 const SectionLab = styled.div`
+  width: 100%;
+  background-color: #fff;
+  font-family: "Montserrat", sans-serif;
   display: flex;
-  gap: 80px; /* Increased from 40px to 80px to add more space between student info and disciplines */
+  gap: 100px;
   justify-content: center;
-  padding: 50px 20px;
+  padding: 50px 0px;
   min-height: 100vh;
-  background-color: #f9f9f9;
 `;
 
-// Smaller info blocks with reduced padding and width
 const List = styled.div`
-  width: 280px;
+  width: 350px;
   padding: 20px;
-  background-color: #D5DEF6;
-  border-radius: 10px;
+  background-color: #BECBEE;
+  border-radius: 7px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease;
-
-  &:hover {
-    transform: translateY(-3px);
-  }
 `;
 
-// Subject list items with reduced padding and width
 const ListSubject = styled.div`
-  width: 100%;
-  max-width: 500px;
+  width: 500px;
+  height: 100%;
+  max-height: 30px;
   padding: 15px 25px;
   background-color: #fff;
-  border-radius: 10px;
+  border-radius: 7px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #f5f5f5;
-  }
 `;
 
-// Container for subjects with reduced padding and gap
 const BigList = styled.div`
   width: 100%;
   max-width: 700px;
   padding: 40px;
-  background-color: #E2EDD0;
+  background-color: #E6F4CF;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 30px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
 `;
 
-// Text styling with slightly smaller font
 const Text = styled.p`
+  font-family: 'Montserrat', sans-serif;
+  font-size: 18px;
+  margin: 0; 
+  text-align: center;
+  color: #000;
+`;
+
+const TextDiscipline = styled.p`
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  margin: 0;
+  text-align: center;
+  color: #000;
+`;
+
+const InfoText = styled.p`
   font-family: 'Montserrat', sans-serif;
   font-size: 16px;
   font-weight: 600;
-  margin: 0;
-  color: #333;
+  text-align: center;
+  color: #000;
 `;
 
-// Reduced gap between blocks in the column
 const RowBlocks = styled.div`
   display: flex;
   flex-direction: column;
@@ -122,19 +122,19 @@ export default function PersonalStud() {
       <RowBlocks>
         <List>
           <Text>ФИО студента:</Text>
-          <Text>{studentInfo.first_name} {studentInfo.last_name} {studentInfo.middle_name}</Text>
+          <InfoText>{studentInfo.first_name} {studentInfo.last_name} {studentInfo.middle_name}</InfoText>
         </List>
         <List>
           <Text>Номер группы:</Text>
-          <Text>{studentInfo.studyGroup}</Text>
+          <InfoText>{studentInfo.studyGroup}</InfoText>
         </List>
         <List>
           <Text>Форма обучения:</Text>
-          <Text>{studentInfo.form_education}</Text>
+          <InfoText>{studentInfo.form_education}</InfoText>
         </List>
         <List>
           <Text>Направление обучения:</Text>
-          <Text>{studentInfo.faculty}</Text>
+          <InfoText>{studentInfo.faculty}</InfoText>
         </List>
       </RowBlocks>
       <RowBlocks>
@@ -149,7 +149,7 @@ export default function PersonalStud() {
                 navigate('/disciplinesStud');
               }}
             >
-              <Text>{item.name}</Text>
+              <TextDiscipline>{item.name}</TextDiscipline>
             </ListSubject>
           ))}
         </BigList>

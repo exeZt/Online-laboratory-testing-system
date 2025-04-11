@@ -38,8 +38,6 @@ const GreenSection = styled.section`
   background-color: #E6F4CF;
   border-radius: 8px;
   padding: 40px;
-  margin: 0 auto;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 `;
 
 const StatsTitle = styled.p`
@@ -54,6 +52,7 @@ const StatsRow = styled.div`
   display: flex;
   justify-content: center;
   gap: 20px;
+  align-items: center;
   margin-bottom: 30px;
 `;
 
@@ -72,6 +71,7 @@ const LabsContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0;
+  align-items: center;
   gap: 25px;
 `;
 
