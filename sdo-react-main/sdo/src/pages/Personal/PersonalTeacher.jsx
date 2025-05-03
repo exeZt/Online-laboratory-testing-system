@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { getUserData } from "../../api/user-api";
-import { getLabs, getGroups } from "../../api/teacher-api";
+import { getGroups, getSubjects } from "../../api/teacher-api";
 
 const SectionLab = styled.div`
   display: flex;
@@ -97,6 +97,8 @@ const PersonalTeacher = () => {
 
   const [groups, setGroups] = useState([]);
 
+  const [subjects, setSubjects] = useState([]);
+
   useEffect(() => {
     getUserData()
       .then((res) => {
@@ -114,10 +116,23 @@ const PersonalTeacher = () => {
         console.error("Ошибка загрузки групп:", error.message);
         setGroups([]);
       });
+
+    getSubjects()
+      .then((res) => {
+        setSubjects(res.data);
+      })
+      .catch((error) => {
+        console.error("Ошибка загрузки дисциплин преподавателя:", error.message);
+        setSubjects([]);
+      });
   }, []);
 
   const handleGroupClick = (groupId) => {
     navigate(`/Groups/${groupId}`);
+  };
+
+  const handleSubjectClick = (subjectId) => {
+    navigate(`/Subjects/${subjectId}`);
   };
 
   return (
@@ -138,9 +153,20 @@ const PersonalTeacher = () => {
       <RowBlocks>
         <BigList>
           <Text>Дисциплины:</Text>
-        </BigList>
-        <BigList>
-          <Text>Список лабораторных работ:</Text>
+          <GroupsContainer>
+            {subjects.length > 0 ? (
+              subjects.map((subject) => (
+                <ListSubject
+                  key={subject.id}
+                  onClick={() => handleSubjectClick(subject.id)}
+                >
+                  <TextDiscipline>{subject.name}</TextDiscipline>
+                </ListSubject>
+              ))
+            ) : (
+              <Text>Дисциплины не найдены</Text>
+            )}
+          </GroupsContainer>
         </BigList>
         <BigList>
           <Text>Список групп:</Text>
