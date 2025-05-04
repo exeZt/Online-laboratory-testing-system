@@ -333,7 +333,7 @@ const Laboratory = () => {
                 {item.name} (Предмет: {item.subject_name})
               </NameLab>
               <SpnLab>
-                <Link to={`/editingLaboratoryPrep/${item.id}`} className="section__lab-edit">
+                <Link to={`/PrepodRedLab/${item.id}`} className="section__lab-edit">
                   Редактировать
                 </Link>
                 <ButtonDelete onClick={() => handleDeleteClick(item.id, index)}>

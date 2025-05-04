@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import FileUploader from './FileUploader';
-import { uploadByTaskId, testingTask, getTaskById } from '../../api/file-api';
+import { uploadByTaskId, testingTask, getTaskById, deleteSolutionById } from '../../api/file-api';
 
 const Container = styled.div`
   display: flex;
@@ -314,6 +314,19 @@ const LabaStud = () => {
       });
   };
 
+  const handleDeleteSolution = (solutionId) => {
+    deleteSolutionById(solutionId)
+      .then(() => {
+        showNotification(true, 'Решение удалено');
+        getTaskById(taskId).then((res) => setTask(res.data));
+      })
+      .catch((error) => {
+        console.error('Ошибка при удалении решения:', error);
+        showNotification(false, 'Ошибка при удалении решения');
+      });
+  };
+  
+
   if (!task) {
     return <Container>Загрузка...</Container>;
   }
@@ -341,11 +354,14 @@ const LabaStud = () => {
               </ToggleButton>
             </div>
             {showSolutions && task.solutions.map((solution, index) => (
-              <div key={index}>
-                <SolutionCode>{solution.code}</SolutionCode>
-                <Text><strong>Статус решения:</strong> {solution.status}</Text>
-              </div>
-            ))}
+              <div key={solution.id} style={{ marginBottom: '20px', position: 'relative' }}>
+              <SolutionCode>{solution.code}</SolutionCode>
+              <Text><strong>Статус решения:</strong> {solution.status}</Text>
+              <ToggleButton onClick={() => handleDeleteSolution(solution.id)}>
+                Удалить решение
+              </ToggleButton>
+            </div>
+          ))}
           </SolutionContainer>
         )}
 

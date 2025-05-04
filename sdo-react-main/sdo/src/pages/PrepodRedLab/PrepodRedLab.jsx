@@ -1,18 +1,18 @@
-import React, {useState} from "react";
-import styled from 'styled-components'
-import { Await, Link } from "react-router-dom";
-import Laboratory from "../Laboratory/Laboratory";
-import { Axios } from "axios";
+import React, { useState, useEffect } from "react";
+import styled from 'styled-components';
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { IoIosClose } from "react-icons/io";
-const Section = styled.section`
+import { getSubjects } from "../../api/teacher-api";
+
+const Section = styled.form`
     display: flex;
     justify-content: center;
     flex-wrap: nowrap;
 `
 const BigBlock = styled.div`
     width: ${({$BigWeight}) => ($BigWeight ? '1248px' : '1247px')};
-    height: ${({$BigHeight}) => ($BigHeight ? '530px' : '375px')};
+    height: ${({$BigHeight}) => ($BigHeight ? '530px' : '250px')};
     background-color: ${({$BigFon}) => ($BigFon ? '#E2EDD0' : '#D5DEF6')};
     border-radius: 10px;
     display: flex;
@@ -21,10 +21,14 @@ const BigBlock = styled.div`
         width: 540px;
         display: flex;
         flex-direction: column;
-        margin-top: 5px;
+        margin-top: 10px;
+        position: relative;
+        right: 2%;
     }
     .block__one{
-        margin-top: 5px;
+        width: 700px;
+        position: relative;
+        top: 4%;
     }
 `
 const MinBlock = styled.li`
@@ -84,10 +88,9 @@ const UlList = styled.ul`
         margin-left: 5px;
         font-family: "Montserrat";
     }
-
     .editing__block-input{
         width: 555px;
-        height: 60px;
+        height: 100px;
         border-radius: 7px;     
         border-style: none;
         color: #000;
@@ -99,7 +102,6 @@ const UlList = styled.ul`
     .editing__block-bth{
         display: flex;
         gap: 10px;
-        /* padding-left: 5px; */
     }
     .editing__block{
         padding: 0px 30px 0px 20px;
@@ -144,21 +146,32 @@ const UlList = styled.ul`
     }
 ` 
 const List = styled.li`
-  width: ${({ $Block }) => ($Block ? '1248px' : '608px')};
-  height: ${({ $Block }) => ($Block ? '59px' : '260px')};
-  background-color: ${({ $Block }) => ($Block ? '#D9D9D9' : '#D5DEF6')};
-  border-radius: 7px;
-  display: flex;
-  align-items: center;
-  list-style-type: none;
-`
-const NameLab = styled.h3`
-    color: #000;
-    text-align: center;
-    font-family: "Montserrat";
-    font-size: 20px;
-    line-height: 40px;
-    font-weight: 500;
+    width: ${({ $Block }) => ($Block ? '1248px' : '608px')};
+    height: ${({ $Block }) => ($Block ? '59px' : '260px')};
+    background-color: ${({ $Back }) => ($Back ? '#E2EDD0' : '#D5DEF6')};
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    list-style-type: none;
+
+    &.subject-block {
+        width: 1248px; /* Устанавливаем максимальную ширину */
+        height: 59px; /* Сохраняем высоту для единообразия */
+    }
+
+    .input__const{
+        height: 45px;
+        border-radius: 5px;
+        background-color: #FFFFFF;
+        border: none;
+        outline: none;
+        font-size: 16px;
+        width: 572px;
+    }
 `
 const TitleBlock = styled.h3`
     color: #000;
@@ -169,7 +182,6 @@ const TitleBlock = styled.h3`
     padding-left: ${({$Padding}) => ($Padding ? '45px' : '0px')};
     margin: ${({$Margin}) => ($Margin ? '0px' : 'none')};
 `
-
 const ButtonAdd = styled.button`
     font-family: "Montserrat";
     width: ${({$ButtonAddW}) => ($ButtonAddW ? '400px' : '274px') };
@@ -186,51 +198,13 @@ const ButtonAdd = styled.button`
             transition: 0.5s;
         }
 `
-const ButtonAddForm = styled.button`
-    font-family: "Montserrat";
-    width: 490px;
-    flex-shrink: 0;
-    border-radius: 4px;
-    background: #FFF;
-    height: 42px;
-    border: none;
-    margin-left: 5px;
-    cursor: pointer;
-        &:hover{    
-            background: #C8D5F6;
-            color: #FFF;
-            border-style: none;
-            transition: 0.5s;
-        }
-`
-const ButtonDelete = styled.button`
-    font-family: "Montserrat";
-    width: 268px;
-    flex-shrink: 0;
-    border-radius: 4px;
-    border: none;
-    background: #FFF;
-    
-    cursor: pointer;
-        &:hover{
-            background: #FF7070;
-            color: #FFF;
-            border-style: none;
-            transition: 0.6s;
-        }
-`
 const FormBlock = styled.li`
-    display: flex;
-    flex-direction: column;
-    padding: 5px;
-    gap: 2px;
-`
-const FormLabel = styled.label`
-    font-family: 'Montserrat';
-    font-size: 16px;
-    line-height: 27px;
-    font-weight: 400;
-    color: #000000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  gap: 2px;
+  width: 100%;
 `
 const FormInput = styled.input`
     height: 45px;
@@ -239,486 +213,306 @@ const FormInput = styled.input`
     border: none;
     outline: none;
     font-size: 16px;
+    width: 100%;
 `
-const ButtonFun = styled.button`
-    background-color: #D9D9D9;
-    width: 1248px;
-    height: 48px;
-    border-radius: 5px;
-    border-style: none;
-    cursor: pointer;
-    font-size: 16px;
-    font-family: 'Montserrat';
-    font-weight: 400px;
-
-    &:hover{
-        background-color: ${({$HoverButton}) => ($HoverButton ? '#C8D5F6' : '#FF7070')};
-        color: #FFFFFF;
-        transition: 0.5s;
-    }
-`
-const NameLabInput = styled.input`
+const NameLabInput = styled.textarea`
     display: flex;
     border: none;
     background: none;
     width: 608px;
     height: 260px;
     font-size: 18px;
-    padding: 0px 0px 0px 30px;
+    padding: 15px 0px 0px 35px;
     outline: none;
 `
 
-const LaboratoryAdd = () => {
+const Notification = styled.div`
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 5px;
+    color: #fff;
+    font-family: "Montserrat";
+    font-size: 14px;
+    background-color: ${({ $isSuccess }) => ($isSuccess ? '#28a745' : '#dc3545')};
+    opacity: ${({ $visible }) => ($visible ? 1 : 0)};
+    transform: translateY(${({ $visible }) => ($visible ? '0' : '20px')});
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    z-index: 1000;
+`;
+
+// Стили для выпадающего списка
+const FormSelect = styled.select`
+    height: 45px;
+    width: 1200px;
+    align-items: center;
+    border-radius: 5px;
+    background-color: #FFFFFF;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    font-family: "Montserrat";
+    padding: 0 10px;
+`;
+
+const PrepodRedLab = () => {
+    const { id } = useParams();
     const [labTitle, setLabTitle] = useState("");
     const [labDescription, setLabDescription] = useState("");
-    const [functions, setFunctions] = useState([]);
-    const [constructions, setConstructions] = useState([]);
-    const [symbols, setSymbols] = useState(0);
-    const [rows, setRows] = useState(0);
-  
-    const handleLabTitleChange = (event) => {
-      setLabTitle(event.target.value);
-    };
-  
-    const handleLabDescriptionChange = (event) => {
-      setLabDescription(event.target.value);
-    };
-  
-    const handleFunctionInputChange = (event, index) => {
-      const updatedFunctions = [...functions];
-      updatedFunctions[index][event.target.name] = event.target.value;
-      setFunctions(updatedFunctions);
-    };
-  
-    const handleTestCaseInputChange = (event, funcIndex, testCaseIndex) => {
-      const updatedFunctions = [...functions];
-      updatedFunctions[funcIndex].test_cases[testCaseIndex][event.target.name] = event.target.value;
-      setFunctions(updatedFunctions);
-    };
-  
-    const handleFormulaInputChange = (event, funcIndex, formulaIndex) => {
-      const updatedFunctions = [...functions];
-      updatedFunctions[funcIndex].formulas[formulaIndex][event.target.name] = event.target.value;
-      setFunctions(updatedFunctions);
-    };
-  
-    const handleLinkedFormulaInputChange = (event, funcIndex, linkedFormulaIndex) => {
-      const updatedFunctions = [...functions];
-      updatedFunctions[funcIndex].linked_formulas[linkedFormulaIndex][event.target.name] = event.target.value;
-      setFunctions(updatedFunctions);
-    };
-  
-    const handleConstructionInputChange = (event, index) => {
-      const updatedConstructions = [...constructions];
-      updatedConstructions[index][event.target.name] = event.target.value;
-      setConstructions(updatedConstructions);
-    };
-  
-    const handleLengthCheckInputChange = (event) => {
-      const name = event.target.name;
-      const value = event.target.value;
-  
-      if (name === "symbols") {
-        setSymbols(value);
-      } else if (name === "rows") {
-        setRows(value);
-      }
-    };
-  
-    const handleSaveLabData = async () => {
-        const labData = {
-          lab_task: {
-            task_text: labDescription,
-            functions,
-            constructions,
-            length_checks: {
-              symbols,
-              rows,
-            },
-          },
-        };
-      
-        try {
-          const response = await Axios.post(
-            'http://0.0.0.0:8000/newtask',
-            labData
-          );
-          console.log(response.data);
-          return response.data;
-        } catch (error) {
-          console.error('Error during lab data save:', error);
-          return { error: 'Failed to save lab data' };
-        }
-      };
-    
-      const handleSaveTaskPyTest = async (data) => {
-        return Axios.post('http://0.0.0.0:8000/newTaskPyTest',data)
-      } 
-
-
-
-
-    const [inputValueSimbol, setInputValueSimbol] = useState('')
-    const [inputValueStr, setInputValueStr] = useState('')
-    const [lengthInput, setLengthInput] = useState([])
-    const [addConstr, setAddConstr] = useState('')
-    const [addConstrBtn, setAddConstrBtn] = useState([])
-    
-    const handleAddConstr = (event) => {
-        setAddConstr(event.target.value)
-    }
-
-    const handleAddConstrBtn = () => {
-        if(addConstr.trim !== ''){
-            const newConstr = [...addConstrBtn, addConstr]
-            
-            setAddConstrBtn(newConstr)
-            setAddConstr('')
-        }
-    }
-
-    const handleDeleteConstr = () => {
-        setAddConstr('')
-    }
-
-    const handleChange = (event, inputNumber) => {
-        const newValue = event.target.value;
-        if ((inputNumber === 1 && newValue !== inputValueStr) || 
-            (inputNumber === 2 && newValue !== inputValueSimbol)) {
-                inputNumber === 1 ? setInputValueSimbol(newValue) : setInputValueStr(newValue);
-            }
-    }
-    const handleDelete = () => {
-        setInputValueSimbol('')
-        setInputValueStr('')
-    }
-
-    const handleAddLengthCheck = () => {
-        const newCheck = {
-            symbolLength: inputValueSimbol.length,
-            stringLength: inputValueStr.length,
-        };
-        setLengthInput([...lengthInput, newCheck]);
-
-        setInputValueSimbol('');
-        setInputValueStr('');
-    }
-
-    const [idFormula, setIdFormula] = useState('');
-    const [descriptionFormula, setDescriptionFormula] = useState('');
-    const [formula, setFormula] = useState('');
-    const [addFormula, setAddFormula] = useState([])
-    
-    const [idRelatedFormula, setIdRelatedFormula] = useState('');
-    const [descriptionRelatedFormula, setDescriptionRelatedFormula] = useState('');
-    const [formulaRelated, setRelatedFormula] = useState('');
-    const [addRelatedFormula, setAddRelatedFormula] = useState([])
-    
-    const handleAddFormul = (event, inputFormul) => {
-        const newFormulaValue = event.target.value;
-        if (inputFormul === 1) {
-            setIdFormula(newFormulaValue);
-        } else if (inputFormul === 2) {
-            setDescriptionFormula(newFormulaValue);
-        } else if (inputFormul === 3) {
-            setFormula(newFormulaValue);
-        }
-    };
-      
-    const handleAddFormulBtn = () => {
-        const newFormul = {
-            idForm: idFormula.length,
-            descriptionForm: descriptionFormula.length,
-            Form: formula.length,
-        };
-        setAddFormula([...addFormula, newFormul]);
-        setIdFormula('');
-        setDescriptionFormula('');
-        setFormula('');
-    };
-
-    const handleDelFormulBtn = () => {
-        setIdFormula('')
-        setDescriptionFormula('')
-        setFormula('')
-    }
-
-    const handleAddRelatedFormul = (event, inputFormulRelated) => {
-        const newFormulaRelatedValue = event.target.value;
-        if (inputFormulRelated === 1) {
-            setIdRelatedFormula(newFormulaRelatedValue);
-        } else if (inputFormulRelated === 2) {
-            setDescriptionRelatedFormula(newFormulaRelatedValue);
-        } else if (inputFormulRelated === 3) {
-            setRelatedFormula(newFormulaRelatedValue);
-        }
-    };
-      
-    const handleAddFormulRelatedBtn = () => {
-        const newFormulRelated = {
-            idForm: idFormula.length,
-            descriptionForm: descriptionFormula.length,
-            Form: formula.length,
-        };
-        setAddRelatedFormula([...addRelatedFormula, newFormulRelated]);
-        setIdRelatedFormula('');
-        setDescriptionRelatedFormula('');
-        setRelatedFormula('');
-    };
-
-    const handleDelFormulRelatedBtn = () => {
-        setIdRelatedFormula('')
-        setDescriptionRelatedFormula('')
-        setRelatedFormula('')
-    }
+    const [formula, setFormula] = useState("");
+    const [inputVariables, setInputVariables] = useState("");
+    const [subjectId, setSubjectId] = useState("");
+    const [subjects, setSubjects] = useState([]);
+    const [tests, setTests] = useState([]);
+    const [newTest, setNewTest] = useState({ inp: "", out: "" });
     const [responseMessage, setResponseMessage] = useState("");
+    const [isSuccess, setIsSuccess] = useState(false);
+    const [showNotification, setShowNotification] = useState(false);
+    const navigate = useNavigate();
 
-  const sendDataToServer = async () => {
-    const labData = {
-      lab_task: {
-        task_text: "Ваш текст задания",
-        functions: [
-          {
-            name: "Имя функции",
-            test_cases: [
-              {
-                input: ["Входные данные"],
-                output: "Ожидаемый вывод"
-              }
-            ],
-            formulas: [
-              {
-                id: "ID формулы",
-                description: "Описание формулы",
-                formula: "Формула"
-              }
-            ],
-            linked_formulas: [
-              {
-                id: "ID связанной формулы",
-                description: "Описание связанной формулы",
-                formula_ids: ["ID1", "ID2"]
-              }
-            ]
-          }
-        ],
-        constructions: [
-          {
-            name: "Имя конструкции",
-            state: true
-          }
-        ],
-        length_checks: [
-          {
-            symbols: 0,
-            rows: 0
-          }
-        ]
-      }
+    useEffect(() => {
+        getSubjects()
+            .then((res) => setSubjects(res.data))
+            .catch((error) => {
+                console.error("Ошибка при загрузке предметов:", error);
+                setResponseMessage("Ошибка при загрузке предметов");
+                setIsSuccess(false);
+            });
+
+        if (id) {
+            axios.get(`http://0.0.0.0:8000/task/${id}`)
+                .then((res) => {
+                    const task = res.data.task || res.data;
+                    setLabTitle(task.name);
+                    setLabDescription(task.description);
+                    setFormula(task.teacher_formula);
+                    setInputVariables(task.input_variables);
+                    setSubjectId(task.Subject_id.toString());
+                    setTests(task.testCases || []);
+                })
+                .catch((err) => {
+                    console.error("Ошибка при загрузке лабораторной:", err);
+                    setResponseMessage("Ошибка при загрузке данных");
+                    setIsSuccess(false);
+                });
+        }
+    }, [id]);
+
+    useEffect(() => {
+        if (responseMessage) {
+            setShowNotification(true);
+            const timer = setTimeout(() => {
+                setShowNotification(false);
+                setResponseMessage("");
+            }, 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [responseMessage]);
+
+    const handleNewTestChange = (field, value) => {
+        setNewTest((prev) => ({ ...prev, [field]: value }));
     };
 
-    try {
-      const response = await axios.post("http://0.0.0.0:8000/newtask", labData);
-      console.log("Ответ от сервера:", response.data);
-      setResponseMessage("Лабораторная работа успешно добавлена!");
-    } catch (error) {
-      console.error("Ошибка при отправке запроса:", error);
-      setResponseMessage("Ошибка при добавлении лабораторной работы");
-    }
-  };
+    const handleAddTest = () => {
+        setTests([...tests, { id: tests.length + 1, ...newTest }]);
+        setNewTest({ inp: "", out: "" });
+    };
+
+    const handleRemoveTest = (index) => {
+        setTests(tests.filter((_, i) => i !== index));
+    };
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+
+        if (!labTitle || !labDescription || !formula || !inputVariables || !subjectId || tests.length === 0) {
+            setResponseMessage("Заполните все поля!");
+            setIsSuccess(false);
+            return;
+        }
+
+        const updatedData = {
+            task: {
+                id: parseInt(id),
+                name: labTitle,
+                description: labDescription,
+                teacher_formula: formula,
+                input_variables: inputVariables,
+                Subject_id: parseInt(subjectId),
+                testCases: tests.map((t, i) => ({ ...t, id: i + 1 }))
+            }
+        };
+
+        axios.put(`http://0.0.0.0:8000/task/${id}`, updatedData)
+            .then(() => {
+                setResponseMessage("Лабораторная успешно обновлена");
+                setIsSuccess(true);
+            })
+            .catch((error) => {
+                console.error("Ошибка при обновлении:", error);
+                setResponseMessage("Ошибка при обновлении лабораторной");
+                setIsSuccess(false);
+            });
+    };
+
     return ( 
         <>
-        <Section>
+        <Section onSubmit={handleSubmit}>
             <UlList>
                 <List>
                     <NameLabInput 
                         type="text" 
-                        placeholder="Введите назавание лабораторной работы"
-                        onChange={handleLabTitleChange}
+                        placeholder="Введите название лабораторной работы"
+                        onChange={(e) => setLabTitle(e.target.value)} 
+                        value={labTitle}
                     /> 
                 </List>
                 <List>
                     <div className="editing__block-Two">
                         <TitleBlock>
-                            Формат ввода данных:
+                            Описание лабораторной
                         </TitleBlock>
-                            <p className="editing__block-text">
-                                Вы можете пояснить, как будет происходить ввод данных
-                            </p>
-                            <input 
-                                className="editing__block-input" 
-                                type="text" 
-                                onChange={handleLabDescriptionChange}
-                                placeholder="Введите текст"
-                            />   
+                        <p className="editing__block-text">
+                            Введите описание лабораторной работы
+                        </p>
+                        <textarea 
+                            className="editing__block-input" 
+                            type="text" 
+                            onChange={(e) => setLabDescription(e.target.value)}
+                            placeholder="Введите текст"
+                            value={labDescription}
+                        />   
                     </div>
-                </List> 
+                </List>
                 <BigBlock $BigFon $BigHeight $BigWeight $GapForm>
                     <div className="block__one">
-                        <TitleBlock $Padding $Margin>
-                            Cписок тестов:
+                        <TitleBlock $Padding>
+                            Список тестов:
                         </TitleBlock> 
-                            <UlMinBlock>
-                                <MinBlock>
+                        <UlMinBlock>
+                            {tests.map((test, index) => (
+                                <MinBlock key={index}>
+                                    <TitleBlock $FontSize $FontWeight $Margin>
+                                        Тест {index + 1}
+                                    </TitleBlock>
+                                    <div className="editing__block-name">
                                         <TitleBlock $FontSize $FontWeight $Margin>
-                                            Тест 1 "Проверка на ..."
+                                            Входные данные:
                                         </TitleBlock>
-                                        <div className="editing__block-name">
-                                            <TitleBlock $FontSize $FontWeight  $Margin>
-                                                Входные данные:
-                                            </TitleBlock> 
-                                                <input type="text" className="some-input"/>     
-                                        </div>  
-                                        <div className="editing__block-name">
-                                            <TitleBlock $FontSize $FontWeight  $Margin>  
+                                        <input
+                                            type="text"
+                                            className="some-input"
+                                            value={test.inp}
+                                            readOnly
+                                        />
+                                    </div>
+                                    <div className="editing__block-name">
+                                        <TitleBlock $FontSize $FontWeight $Margin>
                                             Вывод:
-                                            </TitleBlock> 
-                                                <input type="text" className="some-input"/>     
-                                        </div> 
-                                        <IoIosClose className="icon" />
-                                </MinBlock>
-                                <MinBlock>
-                                    <TitleBlock $FontSize $FontWeight $Margin>
-                                            Тест 1 "Проверка на ..."
                                         </TitleBlock>
-                                        <div className="editing__block-name">
-                                            <TitleBlock $FontSize $FontWeight  $Margin>
-                                                Входные данные:
-                                            </TitleBlock> 
-                                                <input type="text" className="some-input"/>     
-                                        </div>  
-                                        <div className="editing__block-name">
-                                            <TitleBlock $FontSize $FontWeight  $Margin>  
-                                                Вывод:
-                                            </TitleBlock> 
-                                                <input type="text" className="some-input"/>     
-                                        </div> 
-                                        <IoIosClose className="icon"/>
+                                        <input
+                                            type="text"
+                                            className="some-input"
+                                            value={test.out}
+                                            readOnly
+                                        />
+                                    </div>
+                                    <IoIosClose className="icon" onClick={() => handleRemoveTest(index)}/>
                                 </MinBlock>
-                                <MinBlock>
-                                    <TitleBlock $FontSize $FontWeight $Margin>
-                                            Тест 1 "Проверка на ..."
-                                        </TitleBlock>
-                                        <div className="editing__block-name">
-                                            <TitleBlock $FontSize $FontWeight  $Margin>
-                                                Входные данные:
-                                            </TitleBlock> 
-                                                <input type="text" className="some-input"/>     
-                                        </div>  
-                                        <div className="editing__block-name">
-                                            <TitleBlock $FontSize $FontWeight  $Margin>  
-                                                Вывод:
-                                            </TitleBlock> 
-                                                <input type="text" className="some-input"/>     
-                                        </div> 
-                                        <IoIosClose className="icon"/>
-                                </MinBlock>   
-                            </UlMinBlock>
+                            ))}
+                        </UlMinBlock>
                     </div>
                     <div className="block__test">
                         <TitleBlock>
-                            Добавить новый тест:    
-                        </TitleBlock> 
-                        <div className="editing__block-name">
-                            <TitleBlock $FontSize $FontWeight>
-                                Введите название теста:
-                            </TitleBlock> 
-                                <input type="text" className="some-input"/>     
-                        </div>
+                            Добавить новый тест:
+                        </TitleBlock>
                         <div className="editing__block-name">
                             <TitleBlock $FontSize $FontWeight>
                                 Входные данные:
-                            </TitleBlock> 
-                                <input type="text" className="some-input"/>     
+                            </TitleBlock>
+                            <input
+                                type="text"
+                                className="some-input"
+                                value={newTest.inp}
+                                onChange={(e) => handleNewTestChange("inp", e.target.value)}
+                            />
                         </div>
                         <div className="editing__block-name">
                             <TitleBlock $FontSize $FontWeight>
                                 Вывод:
-                            </TitleBlock> 
-                                <input type="text" className="some-input"/>     
+                            </TitleBlock>
+                            <input
+                                type="text"
+                                className="some-input"
+                                value={newTest.out}
+                                onChange={(e) => handleNewTestChange("out", e.target.value)}
+                            />
                         </div>
-                        <ButtonAdd $ButtonAddW>
+                        <ButtonAdd $ButtonAddW type="button" onClick={handleAddTest}>
                             Добавить тест
                         </ButtonAdd>
                     </div>
                 </BigBlock>
-                <BigBlock >
-                <div className="block__one">
-                        <TitleBlock $Padding $Margin>
-                            Cписок тестов:
-                        </TitleBlock> 
-                            <UlMinBlock>
-                                <MinBlock>
-                                        <TitleBlock $FontSize $FontWeight $Margin>
-                                            Тест 1 "Проверка на ..."
-                                        </TitleBlock>
-                                        <div className="editing__block-name">
-                                            <TitleBlock $FontSize $FontWeight  $Margin>
-                                                Входные данные:
-                                            </TitleBlock> 
-                                                <input type="text" className="some-input"/>     
-                                        </div>  
-                                        <div className="editing__block-name">
-                                            <TitleBlock $FontSize $FontWeight  $Margin>  
-                                            Вывод:
-                                            </TitleBlock> 
-                                                <input type="text" className="some-input"/>     
-                                        </div> 
-                                        <IoIosClose className="icon" />
-                                </MinBlock>
-                                <MinBlock>  
-                                    <TitleBlock $FontSize $FontWeight $Margin>
-                                            Тест 1 "Проверка на ..."
-                                        </TitleBlock>
-                                        <div className="editing__block-name">
-                                            <TitleBlock $FontSize $FontWeight  $Margin>
-                                                Входные данные:
-                                            </TitleBlock> 
-                                                <input type="text" className="some-input"/>     
-                                        </div>  
-                                        <div className="editing__block-name">
-                                            <TitleBlock $FontSize $FontWeight  $Margin>  
-                                                Вывод:
-                                            </TitleBlock> 
-                                                <input type="text" className="some-input"/>     
-                                        </div> 
-                                        <IoIosClose className="icon" />
-                                </MinBlock>  
-                            </UlMinBlock>
-                    </div>
+                <BigBlock>
                     <div className="block__test">
                         <TitleBlock $Padding>
-                            Формулы
+                            Формула и переменные
                         </TitleBlock> 
-                        <UlMinBlock >
+                        <UlMinBlock>
                             <FormBlock>
                                 <FormInput 
                                     type="text"
-                                    value={idRelatedFormula}
-                                    onChange={(event) => handleAddRelatedFormul(event,1)}
-                                    placeholder="Введите формулу:"
-                                 />
+                                    value={formula}
+                                    onChange={(e) => setFormula(e.target.value)}
+                                    placeholder="Введите формулу (например, x + y)"
+                                />
                             </FormBlock>
-                            <div className="editing__block-bth">
-                                <ButtonAddForm onClick={handleAddFormulRelatedBtn}>
-                                    Добавить формулу
-                                </ButtonAddForm>
-                            </div>   
+                            <FormBlock>
+                                <FormInput 
+                                    type="text"
+                                    value={inputVariables}
+                                    onChange={(e) => setInputVariables(e.target.value)}
+                                    placeholder="Введите входные переменные (например, a, b)"
+                                />
+                            </FormBlock>
                         </UlMinBlock>
                     </div>
                 </BigBlock>
+                <List className="subject-block">
+                    <FormBlock>
+                        <FormSelect
+                            value={subjectId}
+                            onChange={(e) => setSubjectId(e.target.value)}
+                        >
+                            <option value="">Выберите предмет</option>
+                            {subjects.map((subject) => (
+                                <option key={subject.id} value={subject.id}>
+                                    {subject.name}
+                                </option>
+                            ))}
+                        </FormSelect>
+                    </FormBlock>
+                </List>
                 <div className="block__button"> 
-                    <button className="block__end" type="submit" onClick={sendDataToServer}>
-                        <Link className="block__end-link" to='/Laboratory'>
+                    <button 
+                        className="block__end" 
+                        type="submit"
+                    >
+                        <span className="block__end-link">
                             Завершить редактирование и добавить лабораторную
-                        </Link>
+                        </span>
                     </button>
-                    <p>{responseMessage}</p>   
                 </div>
             </UlList>  
         </Section>
+        {showNotification && (
+            <Notification $isSuccess={isSuccess} $visible={showNotification}>
+                {responseMessage}
+            </Notification>
+        )}
         </>
-     );
+    );
 }
  
-export default LaboratoryAdd;
+export default PrepodRedLab;

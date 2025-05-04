@@ -50,6 +50,12 @@ const MainRouter = ({ setIsLoggedIn }) => {
             <PersonalTeacher />
           </ProtectedRoute>
         } />
+        <Route path="/PrepodRedLab/:id" element={
+          <ProtectedRoute allowedRoles={['teacher']}>
+            <PrepodRedLab />
+          </ProtectedRoute>
+        } />
+        
         <Route path="/checkLaboratory" element={
           <ProtectedRoute allowedRoles={['teacher']}>
             <CheckLaboratory />
@@ -65,7 +71,6 @@ const MainRouter = ({ setIsLoggedIn }) => {
             <Disciplines />
           </ProtectedRoute>
         } />
-
         <Route path="/StudLaboratory" element={
           <ProtectedRoute allowedRoles={['student']}>
             <StudLaboratory />

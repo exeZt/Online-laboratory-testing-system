@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { IoIosClose } from "react-icons/io";
-import { createLab, getSubjects } from "../../api/teacher-api";
+import { createLab, getSubjects, getGroups } from "../../api/teacher-api";
 
 const Section = styled.form`
     display: flex;
@@ -242,7 +242,6 @@ const Notification = styled.div`
     z-index: 1000;
 `;
 
-// Стили для выпадающего списка
 const FormSelect = styled.select`
     height: 45px;
     border-radius: 5px;
@@ -261,30 +260,32 @@ const LaboratoryAdd = () => {
     const [formula, setFormula] = useState("");
     const [inputVariables, setInputVariables] = useState("");
     const [subjectId, setSubjectId] = useState("");
+    const [selectedGroup, setSelectedGroup] = useState(""); // NEW
+    const [groups, setGroups] = useState([]); // NEW
     const [subjects, setSubjects] = useState([]);
     const [tests, setTests] = useState([]);
-    const [newTest, setNewTest] = useState({
-        inp: "",
-        out: "",
-    });
+    const [newTest, setNewTest] = useState({ inp: "", out: "" });
     const [responseMessage, setResponseMessage] = useState("");
     const [isSuccess, setIsSuccess] = useState(false);
     const [showNotification, setShowNotification] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchSubjects = async () => {
-            getSubjects()
-                .then((res) => {
-                    setSubjects(res.data);
-                })
-                .catch((error) => {
-                    console.error("Ошибка при загрузке предметов:", error);
-                    setResponseMessage("Ошибка при загрузке предметов");
-                    setIsSuccess(false);
-                });
-        };
-        fetchSubjects();
+        getSubjects()
+            .then((res) => setSubjects(res.data))
+            .catch((error) => {
+                console.error("Ошибка при загрузке предметов:", error);
+                setResponseMessage("Ошибка при загрузке предметов");
+                setIsSuccess(false);
+            });
+
+        getGroups()
+            .then((res) => setGroups(res.data))
+            .catch((error) => {
+                console.error("Ошибка при загрузке групп:", error);
+                setResponseMessage("Ошибка при загрузке групп");
+                setIsSuccess(false);
+            });
     }, []);
 
     useEffect(() => {
@@ -299,18 +300,12 @@ const LaboratoryAdd = () => {
     }, [responseMessage]);
 
     const handleNewTestChange = (field, value) => {
-        setNewTest((prevState) => ({
-            ...prevState,
-            [field]: value,
-        }));
+        setNewTest((prevState) => ({ ...prevState, [field]: value }));
     };
 
     const handleAddTest = () => {
         setTests([...tests, { id: tests.length + 1, ...newTest }]);
-        setNewTest({
-            inp: "",
-            out: "",
-        });
+        setNewTest({ inp: "", out: "" });
     };
 
     const handleRemoveTest = (index) => {
@@ -333,7 +328,7 @@ const LaboratoryAdd = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        if (!labTitle.trim() || !labDescription.trim() || !formula.trim() || !inputVariables.trim() || !subjectId || tests.length === 0) {
+        if (!labTitle.trim() || !labDescription.trim() || !formula.trim() || !inputVariables.trim() || !subjectId || !selectedGroup || tests.length === 0) {
             setResponseMessage("Заполните все поля!");
             setIsSuccess(false);
             return;
@@ -347,6 +342,7 @@ const LaboratoryAdd = () => {
                 teacher_formula: formula,
                 input_variables: inputVariables,
                 Subject_id: parseInt(subjectId),
+                Group_id: parseInt(selectedGroup), // добавлено
                 testCases: tests.map((test, index) => ({
                     id: index + 1,
                     inp: test.inp,
@@ -385,6 +381,25 @@ const LaboratoryAdd = () => {
                             placeholder="Введите текст"
                             value={labDescription}
                         />   
+                    </div>
+                </List>
+                <List $Back>
+                    <div className="editing__block-Two">
+                        <TitleBlock>Выбор группы</TitleBlock>
+                        <p className="editing__block-text">
+                            Выберите группы, которым будет доступна лабораторная работа
+                        </p>
+                        <FormSelect
+                            value={selectedGroup}
+                            onChange={(e) => setSelectedGroup(e.target.value)}
+                        >
+                            <option value="">Группа</option>
+                            {groups.map((group) => (
+                                <option key={group.id} value={group.id}>
+                                    {group.name}
+                                </option>
+                            ))}
+                        </FormSelect>
                     </div>
                 </List>
                 <BigBlock $BigFon $BigHeight $BigWeight $GapForm>
