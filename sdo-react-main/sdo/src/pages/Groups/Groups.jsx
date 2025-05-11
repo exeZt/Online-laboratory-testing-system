@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { getStudentsByGroup } from "../../api/teacher-api";
 
 const StudentsContainer = styled.div`
@@ -70,6 +70,7 @@ const ViewButton = styled.button`
 
 const StudentsByGroup = () => {
   const { groupId } = useParams();
+  const navigate = useNavigate();
   const [students, setStudents] = useState({ isLoading: true, data: [] });
 
   useEffect(() => {
@@ -87,6 +88,7 @@ const StudentsByGroup = () => {
   }, [groupId]);
 
   const groupName = students.data.length > 0 ? students.data[0].studyGroup : "";
+  const handleViewStudent = (id) => navigate(`/student/${id}`);
 
   return (
     <StudentsContainer>
@@ -104,7 +106,9 @@ const StudentsByGroup = () => {
               <StudentInfo>
                 <StudentName>{student.full_name}</StudentName>
               </StudentInfo>
-              <ViewButton>Просмотреть</ViewButton>
+              <ViewButton onClick={() => handleViewStudent(student.id)}>
+                Просмотреть
+              </ViewButton>
             </StudentItem>
           ))
         )}

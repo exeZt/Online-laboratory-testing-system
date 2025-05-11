@@ -1,4 +1,5 @@
 import { appApiIns } from "./app-api";
+import axios from 'axios';
 
 export function getUserStatus(){
     console.log(appApiIns.headers)
@@ -8,3 +9,7 @@ export function getUserStatus(){
 export function getUserData(){
     return appApiIns.get('user_data');
 }
+
+export const getStudentById = (id) => {
+  return axios.get(`/api/teachers/students/${id}`);
+};
