@@ -250,7 +250,7 @@ const ButtonFun = styled.button`
     cursor: pointer;
     font-size: 16px;
     font-family: 'Montserrat';
-    font-weight: 400px;
+    font-weight: 400;
 
     &:hover{
         background-color: ${({$HoverButton}) => ($HoverButton ? '#C8D5F6' : '#FF7070')};
