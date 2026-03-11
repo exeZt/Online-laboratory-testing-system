@@ -14,29 +14,29 @@ import MainStud from '../../components/Main/mainStud';
 import LabaStud from '../../pages/LabaStud/index';
 import Attempts from '../../pages/Attempts/index'
 import ScrollToTop from '../../components/ScrollToTop'
+
 const MainRouter = () => {
   return (
     <>
       <ScrollToTop />
       <Routes>
-          <Route path="/" element={<Main />} />
-          <Route path="login" element={<Auto />} />
-          <Route path="/Laboratory" element={<Laboratory />} />
-          <Route path="/editingLaboratoryPrep" element={<PrepodRedLab />} />
-          <Route path="/LaboratoryAdd" element={<LaboratoryAdd/>} />
-          <Route path="/PersonalTeacher" element={<PersonalTeacher/>} />
-          <Route path="/StudLaboratory" element={<StudLaboratory />} />
-          <Route path="/PersonalStud" element={<PersonalStud />} />
-          <Route path="/mainStud" element={<MainStud />} />
-          <Route path="/mainTeacher" element={<MainTeacher />} />
-          <Route path="registration" element={<Registration />} />
-          <Route path="/labaStud/:id" element={<LabaStud />} />
-          <Route path="/attempts" element={<Attempts />} />
-          <Route path="registration" element={<Registration />} />
-          <Route path="*" element={<Navigate to="/login" />} />
-      </Routes>  
+        <Route path="/" element={<Main />} />
+        <Route path="login" element={<Auto />} />
+        <Route path="/Laboratory" element={<Laboratory />} />
+        <Route path="/editingLaboratoryPrep" element={<PrepodRedLab />} />
+        <Route path="/LaboratoryAdd" element={<LaboratoryAdd/>} />
+        <Route path="/PersonalTeacher" element={<PersonalTeacher/>} />
+        <Route path="/StudLaboratory" element={<StudLaboratory />} />
+        <Route path="/PersonalStud" element={<PersonalStud />} />
+        <Route path="/mainStud" element={<MainStud />} />
+        <Route path="/mainTeacher" element={<MainTeacher />} />
+        <Route path="registration" element={<Registration />} />
+        <Route path="/labaStud/:id" element={<LabaStud />} />
+        <Route path="/attempts" element={<Attempts />} />
+        <Route path="registration" element={<Registration />} />
+        <Route path="*" element={<Navigate to="/login" />} />
+      </Routes>
     </>
-
   );
 };
 

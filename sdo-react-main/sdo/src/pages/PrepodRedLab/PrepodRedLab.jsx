@@ -5,6 +5,7 @@ import Laboratory from "../Laboratory/Laboratory";
 import { Axios } from "axios";
 import axios from "axios";
 import { IoIosClose } from "react-icons/io";
+
 const Section = styled.section`
     display: flex;
     justify-content: center;

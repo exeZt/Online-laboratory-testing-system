@@ -2,6 +2,12 @@
   "name": "sdo",
   "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "start": "react-scripts start --port 4000",
+    "build": "react-scripts build",
+    "eject": "react-scripts eject",
+    "test": "jest"
+  },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.2",
     "@testing-library/user-event": "^13.5.0",
@@ -24,12 +30,6 @@
     "@testing-library/react": "^14.2.2",
     "jest": "^29.7.0",
     "react-scripts": "^5.0.1"
-  },
-  "scripts": {
-    "start": "react-scripts start --port 4000",
-    "build": "react-scripts build",
-    "eject": "react-scripts eject",
-    "test": "jest"
   },
   "eslintConfig": {
     "extends": [

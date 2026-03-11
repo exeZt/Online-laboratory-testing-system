@@ -1,0 +1,10 @@
+.idea
+.vscode
+
+**/node_modules/
+./sdo-react-main/sdo/build/
+
+.env
+
+/sdo-react-main/back/.python-version
+/sdo-react-main/back/.venv/

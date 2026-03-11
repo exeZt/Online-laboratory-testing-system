@@ -30,7 +30,7 @@ const Form = styled.form`
     color: #252525;
     font-family: 'Montserrat';
     outline: none;
-}
+  }
 `
 const Button = styled.button`
     height: 40px;

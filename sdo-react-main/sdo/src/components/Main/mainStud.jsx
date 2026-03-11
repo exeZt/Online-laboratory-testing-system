@@ -7,15 +7,15 @@ const Section = styled.section`
     padding: 40px 0px 245px;
 `
 const MainStud = () => {
-    return ( 
-      <>
-        <Section>
-          <h1>
-            Страница Студентов
-          </h1>
-        </Section>
-      </>
-    );
+  return (
+    <>
+      <Section>
+        <h1>
+          Страница Студентов
+        </h1>
+      </Section>
+    </>
+  );
 }
 
 export default MainStud;
